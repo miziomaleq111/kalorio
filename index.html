@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl" data-theme="dark">
+<html lang="pl" data-theme="dark" data-accent="violet">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,9 +12,35 @@
   <link rel="manifest" href="manifest.webmanifest?v=2">
   <link rel="icon" href="icon.svg">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
+  <section class="onboarding hidden" id="onboarding" aria-live="polite">
+    <div class="onboarding-glow glow-one"></div><div class="onboarding-glow glow-two"></div>
+    <div class="onboarding-card" id="authStep">
+      <div class="onboarding-logo"><img src="icon.svg" alt=""><span>kalorio</span></div>
+      <p class="eyebrow">Twój prywatny dziennik</p>
+      <h1>Jedz świadomie.<br>Bez zgadywania.</h1>
+      <p class="onboarding-copy">Zapisuj posiłki, śledź makro i analizuj jedzenie ze zdjęcia albo dokładnego opisu.</p>
+      <button class="google-btn" id="googleSignIn"><span class="google-mark">G</span><b>Kontynuuj z Google</b></button>
+      <button class="offline-btn hidden" id="continueOffline">Na razie korzystaj lokalnie</button>
+      <p class="privacy-note"><span data-icon="shield"></span> Dane konta służą do bezpiecznego logowania. Dziennik pozostaje na tym urządzeniu do czasu włączenia synchronizacji.</p>
+    </div>
+    <form class="onboarding-card hidden" id="setupStep">
+      <div class="setup-progress"><span class="done"></span><span class="active"></span></div>
+      <p class="eyebrow">Ostatni krok</p><h1>Ustawmy Twój cel</h1>
+      <p class="onboarding-copy">Na tej podstawie obliczymy kalorie i makroskładniki. Wszystko później zmienisz w profilu.</p>
+      <div class="setup-grid">
+        <label><span>Płeć</span><select id="setupSex"><option value="male">Mężczyzna</option><option value="female">Kobieta</option></select></label>
+        <label><span>Wiek</span><div class="input-unit"><input id="setupAge" type="number" min="14" max="100" value="25" required><em>lat</em></div></label>
+        <label><span>Wzrost</span><div class="input-unit"><input id="setupHeight" type="number" min="130" max="230" value="180" required><em>cm</em></div></label>
+        <label><span>Masa ciała</span><div class="input-unit"><input id="setupWeight" type="number" min="35" max="300" step="0.1" value="75" required><em>kg</em></div></label>
+        <label class="span-2"><span>Aktywność</span><select id="setupActivity"><option value="1.2">Mała — bez treningów</option><option value="1.375">Lekka — 1–3 treningi</option><option value="1.55" selected>Średnia — 3–5 treningów</option><option value="1.725">Wysoka — 6–7 treningów</option></select></label>
+        <label class="span-2"><span>Cel</span><select id="setupGoal"><option value="-400">Redukcja</option><option value="0" selected>Utrzymanie masy</option><option value="300">Budowa masy</option></select></label>
+      </div>
+      <button class="primary-btn full" id="finishSetup" type="submit"><span data-icon="sparkles"></span> Utwórz mój plan</button>
+    </form>
+  </section>
   <div class="app-shell">
     <aside class="sidebar" aria-label="Nawigacja główna">
       <a class="brand" href="#" data-view-link="today" aria-label="Kalorio — strona główna">
@@ -28,7 +54,7 @@
         <button class="nav-item" data-view="profile"><span data-icon="user"></span><b>Profil i cele</b></button>
       </nav>
       <div class="sidebar-foot">
-        <div class="streak-mini"><span data-icon="flame"></span><div><b><span id="streakSide">6</span> dni</b><small>Twoja seria</small></div></div>
+        <div class="streak-mini"><span data-icon="flame"></span><div><b><span id="streakSide">0</span> dni</b><small>Twoja seria</small></div></div>
         <button class="theme-toggle" data-theme-toggle aria-label="Zmień motyw"><span data-icon="sun"></span><span>Jasny motyw</span></button>
       </div>
     </aside>
@@ -44,8 +70,8 @@
 
       <section class="view active" id="view-today">
         <div class="page-head">
-          <div><p class="eyebrow">Dziennik żywienia</p><h1>Dzień dobry, Ksawery</h1><p class="muted">Małe wybory budują duży efekt.</p></div>
-          <button class="profile-chip" data-view-link="profile"><span class="avatar">K</span><span><b>Twój profil</b><small>Cel: utrzymanie</small></span><span data-icon="chevron"></span></button>
+            <div><p class="eyebrow">Dziennik żywienia</p><h1 id="greetingTitle">Dzień dobry</h1><p class="muted">Małe wybory budują duży efekt.</p></div>
+            <button class="profile-chip" data-view-link="profile"><span class="avatar user-initial">K</span><span><b id="profileChipName">Twój profil</b><small id="profileChipGoal">Cel: utrzymanie</small></span><span data-icon="chevron"></span></button>
         </div>
 
         <div class="date-strip">
@@ -58,9 +84,9 @@
           <article class="card calorie-card">
             <div class="card-top"><div><p class="eyebrow">Bilans dnia</p><h2>Kalorie</h2></div><span class="status-pill" id="balanceStatus">W dobrym rytmie</span></div>
             <div class="calorie-content">
-              <div class="calorie-ring" id="calorieRing"><div><strong id="remainingKcal">1 012</strong><span>kcal zostało</span></div></div>
+              <div class="calorie-ring" id="calorieRing"><div><strong id="remainingKcal">2 200</strong><span>kcal zostało</span></div></div>
               <div class="calorie-stats">
-                <div><span class="dot eaten"></span><p>Zjedzone</p><b><span id="eatenKcal">1 188</span> kcal</b></div>
+                <div><span class="dot eaten"></span><p>Zjedzone</p><b><span id="eatenKcal">0</span> kcal</b></div>
                 <div><span class="dot goal"></span><p>Cel dzienny</p><b><span id="goalKcal">2 200</span> kcal</b></div>
                 <div><span class="dot activity"></span><p>Aktywność</p><b>+<span id="activityKcal">0</span> kcal</b></div>
               </div>
@@ -70,9 +96,9 @@
           <article class="card macro-card">
             <div class="card-top"><div><p class="eyebrow">Dzisiejsze makro</p><h2>Makroskładniki</h2></div><button class="text-btn" data-view-link="progress">Szczegóły</button></div>
             <div class="macro-list">
-              <div class="macro-row"><div class="macro-label"><span class="macro-icon protein">P</span><span><b>Białko</b><small><span id="proteinValue">73</span> / <span id="proteinGoal">150</span> g</small></span></div><div class="bar"><i id="proteinBar"></i></div><strong id="proteinPercent">49%</strong></div>
-              <div class="macro-row"><div class="macro-label"><span class="macro-icon carbs">W</span><span><b>Węglowodany</b><small><span id="carbsValue">121</span> / <span id="carbsGoal">248</span> g</small></span></div><div class="bar"><i id="carbsBar"></i></div><strong id="carbsPercent">49%</strong></div>
-              <div class="macro-row"><div class="macro-label"><span class="macro-icon fat">T</span><span><b>Tłuszcze</b><small><span id="fatValue">46</span> / <span id="fatGoal">68</span> g</small></span></div><div class="bar"><i id="fatBar"></i></div><strong id="fatPercent">68%</strong></div>
+              <div class="macro-row"><div class="macro-label"><span class="macro-icon protein">P</span><span><b>Białko</b><small><span id="proteinValue">0</span> / <span id="proteinGoal">150</span> g</small></span></div><div class="bar"><i id="proteinBar"></i></div><strong id="proteinPercent">0%</strong></div>
+              <div class="macro-row"><div class="macro-label"><span class="macro-icon carbs">W</span><span><b>Węglowodany</b><small><span id="carbsValue">0</span> / <span id="carbsGoal">248</span> g</small></span></div><div class="bar"><i id="carbsBar"></i></div><strong id="carbsPercent">0%</strong></div>
+              <div class="macro-row"><div class="macro-label"><span class="macro-icon fat">T</span><span><b>Tłuszcze</b><small><span id="fatValue">0</span> / <span id="fatGoal">68</span> g</small></span></div><div class="bar"><i id="fatBar"></i></div><strong id="fatPercent">0%</strong></div>
             </div>
           </article>
         </div>
@@ -82,7 +108,7 @@
 
         <div class="lower-grid">
           <article class="card water-card">
-            <div class="water-head"><div class="water-symbol"><span data-icon="drop"></span></div><div><p class="eyebrow">Nawodnienie</p><h3><span id="waterValue">1,25</span> / <span id="waterGoal">2,50</span> l</h3></div><strong id="waterPercent">50%</strong></div>
+            <div class="water-head"><div class="water-symbol"><span data-icon="drop"></span></div><div><p class="eyebrow">Nawodnienie</p><h3><span id="waterValue">0,00</span> / <span id="waterGoal">2,50</span> l</h3></div><strong id="waterPercent">0%</strong></div>
             <div class="bar large"><i id="waterBar"></i></div>
             <div class="water-actions"><button data-water="-250">− 250 ml</button><button class="accent-soft" data-water="250">+ 250 ml</button></div>
           </article>
@@ -107,8 +133,8 @@
         <div class="ai-grid">
           <article class="card ai-card featured">
             <div class="ai-card-icon"><span data-icon="message"></span></div><p class="eyebrow">Opis tekstowy</p><h2>Napisz, co było na talerzu</h2><p>Uwzględnij produkty i przybliżone porcje. Im dokładniejszy opis, tym lepszy wynik.</p>
-            <textarea id="aiText" rows="5" placeholder="Np. 150 g piersi z kurczaka, 200 g ugotowanego ryżu, pół papryki i łyżka oliwy"></textarea>
-            <div class="example-chips"><button>Owsianka z bananem i masłem orzechowym</button><button>2 kanapki z szynką i serem</button></div>
+            <textarea id="aiText" rows="5" placeholder="Np. 60 g kleiku ryżowego, 30 g Whey WPC i 100 ml mleka 3,2%"></textarea>
+            <div class="example-chips"><button>Kleik ryżowy z 30 g WPC i 100 ml mleka 3,2%</button><button>2 kanapki z szynką i serem</button></div>
             <button class="primary-btn full" id="analyzeText"><span data-icon="sparkles"></span> Oblicz kalorie i makro</button>
           </article>
           <article class="card ai-card">
@@ -124,14 +150,14 @@
       <section class="view" id="view-progress">
         <div class="page-head"><div><p class="eyebrow">Twoje wyniki</p><h1>Postępy</h1><p class="muted">Patrz na trend, nie na pojedynczy dzień.</p></div><button class="secondary-btn" id="addWeightBtn"><span data-icon="plus"></span> Dodaj pomiar</button></div>
         <div class="stat-grid">
-          <article class="stat-card"><span class="stat-icon" data-icon="scale"></span><p>Aktualna masa</p><h2><span id="currentWeight">78,4</span> kg</h2><small class="positive">−0,8 kg w tym miesiącu</small></article>
-          <article class="stat-card"><span class="stat-icon" data-icon="target"></span><p>Średnia kalorii</p><h2><span id="avgKcal">2 061</span> kcal</h2><small>Ostatnie 7 dni</small></article>
-          <article class="stat-card"><span class="stat-icon" data-icon="check"></span><p>Dni w celu</p><h2><span id="daysOnTarget">5</span> / 7</h2><small>Między 90–110% celu</small></article>
-          <article class="stat-card"><span class="stat-icon" data-icon="flame"></span><p>Aktualna seria</p><h2><span id="streakValue">6</span> dni</h2><small class="positive">Twój rekord: 12 dni</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="scale"></span><p>Aktualna masa</p><h2><span id="currentWeight">—</span> kg</h2><small id="weightTrend">Dodaj pierwszy pomiar</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="target"></span><p>Średnia kalorii</p><h2><span id="avgKcal">0</span> kcal</h2><small>Ostatnie 7 dni</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="check"></span><p>Dni w celu</p><h2><span id="daysOnTarget">0</span> / 7</h2><small>Między 90–110% celu</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="flame"></span><p>Aktualna seria</p><h2><span id="streakValue">0</span> dni</h2><small id="streakHint">Dodaj pierwszy posiłek</small></article>
         </div>
         <div class="progress-grid">
           <article class="card chart-card"><div class="card-top"><div><p class="eyebrow">Kalorie</p><h2>Ostatnie 7 dni</h2></div><div class="legend"><span><i class="legend-bar"></i>Zjedzone</span><span><i class="legend-line"></i>Cel</span></div></div><div class="week-chart" id="weekChart"></div></article>
-          <article class="card consistency-card"><p class="eyebrow">Regularność</p><h2>Dobry tydzień</h2><div class="score-ring"><strong>84</strong><span>/ 100</span></div><p>Jesteś konsekwentny. Uzupełnij jeszcze dwa dni, żeby pobić wynik z poprzedniego tygodnia.</p><div class="mini-checks"><span class="done">P</span><span class="done">W</span><span class="done">Ś</span><span class="done">C</span><span class="done">P</span><span>S</span><span>N</span></div></article>
+          <article class="card consistency-card"><p class="eyebrow">Regularność</p><h2 id="consistencyTitle">Nowy początek</h2><div class="score-ring"><strong id="consistencyScore">0</strong><span>/ 100</span></div><p id="consistencyText">Dodawaj posiłki każdego dnia, a zobaczysz tutaj swój trend.</p><div class="mini-checks" id="consistencyChecks"></div></article>
         </div>
       </section>
 
@@ -148,7 +174,9 @@
           </div></article>
           <aside class="card needs-card"><p class="eyebrow">Twój plan</p><h2>Dzienne zapotrzebowanie</h2><div class="need-number"><strong id="calculatedGoal">2 200</strong><span>kcal / dzień</span></div><div class="need-breakdown"><div><span>Podstawowa przemiana</span><b id="bmrValue">1 778 kcal</b></div><div><span>Całkowite zapotrzebowanie</span><b id="tdeeValue">2 756 kcal</b></div><div><span>Korekta celu</span><b id="goalAdjustment">0 kcal</b></div></div><div class="macro-targets"><div class="protein"><b id="calcProtein">150 g</b><span>Białko</span></div><div class="carbs"><b id="calcCarbs">248 g</b><span>Węgle</span></div><div class="fat"><b id="calcFat">68 g</b><span>Tłuszcze</span></div></div><p class="formula-note"><span data-icon="info"></span> Wynik obliczamy wzorem Mifflina–St Jeora. To dobry punkt startowy — obserwuj trend masy przez 2–3 tygodnie.</p></aside>
         </div>
-        <article class="card settings-card"><div><span class="settings-icon" data-icon="moon"></span><span><b>Wygląd aplikacji</b><small>Wybierz motyw wygodny dla oczu</small></span></div><div class="segmented"><button data-theme-choice="dark" class="selected">Ciemny</button><button data-theme-choice="light">Jasny</button><button data-theme-choice="system">Systemowy</button></div></article>
+        <article class="card settings-card"><div><span class="settings-icon" data-icon="moon"></span><span><b>Jasność aplikacji</b><small>Wybierz motyw wygodny dla oczu</small></span></div><div class="segmented"><button data-theme-choice="dark" class="selected">Ciemny</button><button data-theme-choice="light">Jasny</button><button data-theme-choice="system">Systemowy</button></div></article>
+        <article class="card settings-card palette-card"><div><span class="settings-icon" data-icon="palette"></span><span><b>Kolor aplikacji</b><small>Wybierz paletę, która pasuje do Ciebie</small></span></div><div class="palette-options" aria-label="Kolor aplikacji"><button data-accent-choice="violet" class="violet selected" aria-label="Fioletowy"></button><button data-accent-choice="ocean" class="ocean" aria-label="Niebieski"></button><button data-accent-choice="sunset" class="sunset" aria-label="Pomarańczowy"></button><button data-accent-choice="rose" class="rose" aria-label="Różowy"></button><button data-accent-choice="lime" class="lime" aria-label="Zielony"></button></div></article>
+        <article class="card settings-card account-card"><div><span class="account-avatar" id="accountAvatar">K</span><span><b id="accountName">Konto lokalne</b><small id="accountEmail">Połącz Google, aby synchronizować dane</small></span></div><button class="secondary-btn hidden" id="signOutBtn">Wyloguj</button></article>
         <article class="card settings-card install-card"><div><span class="settings-icon" data-icon="phone"></span><span><b>Zainstaluj Kalorio</b><small>Dodaj aplikację do ekranu głównego iPhone’a</small></span></div><button class="secondary-btn" id="installHelp">Pokaż instrukcję</button></article>
       </section>
     </main>
@@ -200,6 +228,7 @@
   </section>
 
   <div class="toast" id="toast"><span data-icon="check"></span><span id="toastText">Gotowe</span></div>
-  <script src="app.js?v=2"></script>
+  <script src="firebase-config.js?v=3"></script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>
