@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="pl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0d0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kalorio">
+  <title>Kalorio - dziennik kalorii</title>
+  <meta name="description" content="Mobilny dziennik kalorii, makro i posi�k�w.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Nawigacja g��wna">
+      <a class="brand" href="#" data-view-link="today" aria-label="Kalorio - strona g��wna">
+        <span class="brand-mark"><span></span></span><span>kalorio</span>
+      </a>
+      <nav class="side-nav">
+        <button class="nav-item active" data-view="today"><span data-icon="home"></span><b>Dzisiaj</b></button>
+        <button class="nav-item" data-view="food"><span data-icon="search"></span><b>Produkty</b></button>
+        <button class="nav-item" data-view="ai"><span data-icon="sparkles"></span><b>Asystent AI</b><em>beta</em></button>
+        <button class="nav-item" data-view="progress"><span data-icon="chart"></span><b>Post�py</b></button>
+        <button class="nav-item" data-view="profile"><span data-icon="user"></span><b>Profil i cele</b></button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="streak-mini"><span data-icon="flame"></span><div><b><span id="streakSide">6</span> dni</b><small>Twoja seria</small></div></div>
+        <button class="theme-toggle" data-theme-toggle aria-label="Zmie� motyw"><span data-icon="sun"></span><span>Jasny motyw</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="mobile-header">
+        <a class="brand" href="#" data-view-link="today"><span class="brand-mark"><span></span></span><span>kalorio</span></a>
+        <div class="header-actions">
+          <button class="icon-btn" data-theme-toggle aria-label="Zmie� motyw"><span data-icon="sun"></span></button>
+          <button class="avatar" data-view-link="profile" aria-label="Otw�rz profil">K</button>
+        </div>
+      </header>
+
+      <section class="view active" id="view-today">
+        <div class="page-head">
+          <div><p class="eyebrow">Dziennik �ywienia</p><h1>Dzie� dobry, Ksawery</h1><p class="muted">Ma�e wybory buduj� du�y efekt.</p></div>
+          <button class="profile-chip" data-view-link="profile"><span class="avatar">K</span><span><b>Tw�j profil</b><small>Cel: utrzymanie</small></span><span data-icon="chevron"></span></button>
+        </div>
+
+        <div class="date-strip">
+          <button class="icon-btn" id="prevDay" aria-label="Poprzedni dzie�"><span data-icon="back"></span></button>
+          <button class="date-current" id="datePickerBtn"><b id="dateTitle">Dzisiaj</b><span id="dateLong">20 listopada, pi�tek</span></button>
+          <button class="icon-btn" id="nextDay" aria-label="Nast�pny dzie�"><span data-icon="forward"></span></button>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="card calorie-card">
+            <div class="card-top"><div><p class="eyebrow">Bilans dnia</p><h2>Kalorie</h2></div><span class="status-pill" id="balanceStatus">W dobrym rytmie</span></div>
+            <div class="calorie-content">
+              <div class="calorie-ring" id="calorieRing"><div><strong id="remainingKcal">1 012</strong><span>kcal zosta�o</span></div></div>
+              <div class="calorie-stats">
+                <div><span class="dot eaten"></span><p>Zjedzone</p><b><span id="eatenKcal">1 188</span> kcal</b></div>
+                <div><span class="dot goal"></span><p>Cel dzienny</p><b><span id="goalKcal">2 200</span> kcal</b></div>
+                <div><span class="dot activity"></span><p>Aktywno��</p><b>+<span id="activityKcal">0</span> kcal</b></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card macro-card">
+            <div class="card-top"><div><p class="eyebrow">Dzisiejsze makro</p><h2>Makrosk�adniki</h2></div><button class="text-btn" data-view-link="progress">Szczeg��y</button></div>
+            <div class="macro-list">
+              <div class="macro-row"><div class="macro-label"><span class="macro-icon protein">P</span><span><b>Bia�ko</b><small><span id="proteinValue">73</span> / <span id="proteinGoal">150</span> g</small></span></div><div class="bar"><i id="proteinBar"></i></div><strong id="proteinPercent">49%</strong></div>
+              <div class="macro-row"><div class="macro-label"><span class="macro-icon carbs">W</span><span><b>W�glowodany</b><small><span id="carbsValue">121</span> / <span id="carbsGoal">248</span> g</small></span></div><div class="bar"><i id="carbsBar"></i></div><strong id="carbsPercent">49%</strong></div>
+              <div class="macro-row"><div class="macro-label"><span class="macro-icon fat">T</span><span><b>T�uszcze</b><small><span id="fatValue">46</span> / <span id="fatGoal">68</span> g</small></span></div><div class="bar"><i id="fatBar"></i></div><strong id="fatPercent">68%</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-heading"><div><p class="eyebrow">Plan dnia</p><h2>Twoje posi�ki</h2></div><button class="primary-btn compact" data-open-add><span data-icon="plus"></span> Dodaj posi�ek</button></div>
+        <div class="meal-list" id="mealList"></div>
+
+        <div class="lower-grid">
+          <article class="card water-card">
+            <div class="water-head"><div class="water-symbol"><span data-icon="drop"></span></div><div><p class="eyebrow">Nawodnienie</p><h3><span id="waterValue">1,25</span> / <span id="waterGoal">2,50</span> l</h3></div><strong id="waterPercent">50%</strong></div>
+            <div class="bar large"><i id="waterBar"></i></div>
+            <div class="water-actions"><button data-water="-250">- 250 ml</button><button class="accent-soft" data-water="250">+ 250 ml</button></div>
+          </article>
+          <article class="card insight-card">
+            <span class="insight-icon" data-icon="sparkles"></span><div><p class="eyebrow">Wskaz�wka dnia</p><h3>Jeszcze 77 g bia�ka</h3><p>Dodaj jogurt skyr, twar�g albo pier� z kurczaka, aby �atwiej domkn�� dzisiejszy cel.</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-food">
+        <div class="page-head"><div><p class="eyebrow">Baza �ywno�ci</p><h1>Znajd� produkt</h1><p class="muted">Wyszukaj produkt, ustaw porcj� i dodaj do dziennika.</p></div><button class="secondary-btn" id="openCustomProduct"><span data-icon="plus"></span> W�asny produkt</button></div>
+        <div class="search-box large"><span data-icon="search"></span><input id="foodSearch" type="search" placeholder="Np. skyr, banan, pier� z kurczaka" autocomplete="off"><kbd>? K</kbd></div>
+        <div class="filter-row" id="categoryFilters"></div>
+        <div class="food-layout">
+          <div><div class="section-heading slim"><div><p class="eyebrow">Wyniki</p><h2>Popularne produkty</h2></div><span class="result-count" id="resultCount"></span></div><div class="product-grid" id="productGrid"></div></div>
+          <aside class="card recent-panel"><p class="eyebrow">Szybki dost�p</p><h3>Ostatnio dodane</h3><div id="recentProducts"></div><div class="recent-note"><span data-icon="clock"></span><p>Najcz��ciej wybierane produkty zawsze masz pod r�k�.</p></div></aside>
+        </div>
+      </section>
+
+      <section class="view" id="view-ai">
+        <div class="page-head"><div><p class="eyebrow">Asystent �ywieniowy</p><h1>Dodaj posi�ek z AI</h1><p class="muted">Opisz, co zjad�e�, albo dodaj zdj�cie. Zawsze mo�esz poprawi� wynik przed zapisem.</p></div><span class="status-pill ai-pill"><span data-icon="sparkles"></span> AI beta</span></div>
+        <div class="ai-grid">
+          <article class="card ai-card featured">
+            <div class="ai-card-icon"><span data-icon="message"></span></div><p class="eyebrow">Opis tekstowy</p><h2>Napisz, co by�o na talerzu</h2><p>Uwzgl�dnij produkty i przybli�one porcje. Im dok�adniejszy opis, tym lepszy wynik.</p>
+            <textarea id="aiText" rows="5" placeholder="Np. 150 g piersi z kurczaka, 200 g ugotowanego ry�u, p�� papryki i �y�ka oliwy"></textarea>
+            <div class="example-chips"><button>Owsianka z bananem i mas�em orzechowym</button><button>2 kanapki z szynk� i serem</button></div>
+            <button class="primary-btn full" id="analyzeText"><span data-icon="sparkles"></span> Oblicz kalorie i makro</button>
+          </article>
+          <article class="card ai-card">
+            <div class="ai-card-icon camera"><span data-icon="camera"></span></div><p class="eyebrow">Analiza zdj�cia</p><h2>Zr�b zdj�cie posi�ku</h2><p>Ustaw talerz w dobrym �wietle i sfotografuj go z g�ry. Wynik potraktuj jako przybli�enie.</p>
+            <label class="photo-drop" id="photoDrop"><input id="photoInput" type="file" accept="image/*" capture="environment"><span data-icon="camera"></span><b>Dodaj lub zr�b zdj�cie</b><small>JPG, PNG lub HEIC</small></label>
+            <div id="photoPreview" class="photo-preview hidden"><img alt="Podgl�d posi�ku"><button class="secondary-btn" id="analyzePhoto"><span data-icon="sparkles"></span> Analizuj zdj�cie</button></div>
+          </article>
+        </div>
+        <div class="analysis-result card hidden" id="analysisResult"></div>
+        <div class="ai-disclaimer"><span data-icon="info"></span><p>Szacunki AI mog� si� r��ni� od rzeczywistej warto�ci. Sprawd� porcje i sk�adniki przed dodaniem do dziennika.</p></div>
+      </section>
+
+      <section class="view" id="view-progress">
+        <div class="page-head"><div><p class="eyebrow">Twoje wyniki</p><h1>Post�py</h1><p class="muted">Patrz na trend, nie na pojedynczy dzie�.</p></div><button class="secondary-btn" id="addWeightBtn"><span data-icon="plus"></span> Dodaj pomiar</button></div>
+        <div class="stat-grid">
+          <article class="stat-card"><span class="stat-icon" data-icon="scale"></span><p>Aktualna masa</p><h2><span id="currentWeight">78,4</span> kg</h2><small class="positive">-0,8 kg w tym miesi�cu</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="target"></span><p>�rednia kalorii</p><h2><span id="avgKcal">2 061</span> kcal</h2><small>Ostatnie 7 dni</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="check"></span><p>Dni w celu</p><h2><span id="daysOnTarget">5</span> / 7</h2><small>Mi�dzy 90-110% celu</small></article>
+          <article class="stat-card"><span class="stat-icon" data-icon="flame"></span><p>Aktualna seria</p><h2><span id="streakValue">6</span> dni</h2><small class="positive">Tw�j rekord: 12 dni</small></article>
+        </div>
+        <div class="progress-grid">
+          <article class="card chart-card"><div class="card-top"><div><p class="eyebrow">Kalorie</p><h2>Ostatnie 7 dni</h2></div><div class="legend"><span><i class="legend-bar"></i>Zjedzone</span><span><i class="legend-line"></i>Cel</span></div></div><div class="week-chart" id="weekChart"></div></article>
+          <article class="card consistency-card"><p class="eyebrow">Regularno��</p><h2>Dobry tydzie�</h2><div class="score-ring"><strong>84</strong><span>/ 100</span></div><p>Jeste� konsekwentny. Uzupe�nij jeszcze dwa dni, �eby pobi� wynik z poprzedniego tygodnia.</p><div class="mini-checks"><span class="done">P</span><span class="done">W</span><span class="done">�</span><span class="done">C</span><span class="done">P</span><span>S</span><span>N</span></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-profile">
+        <div class="page-head"><div><p class="eyebrow">Ustawienia</p><h1>Profil i cele</h1><p class="muted">Dopasuj zapotrzebowanie i cele makro do swojego planu.</p></div><button class="primary-btn" id="saveProfile"><span data-icon="check"></span> Zapisz zmiany</button></div>
+        <div class="profile-grid">
+          <article class="card form-card"><p class="eyebrow">Twoje dane</p><h2>Kalkulator zapotrzebowania</h2><div class="form-grid">
+            <label><span>P�e�</span><select id="profileSex"><option value="male">M��czyzna</option><option value="female">Kobieta</option></select></label>
+            <label><span>Wiek</span><div class="input-unit"><input id="profileAge" type="number" min="14" max="100" value="27"><em>lat</em></div></label>
+            <label><span>Wzrost</span><div class="input-unit"><input id="profileHeight" type="number" min="130" max="230" value="181"><em>cm</em></div></label>
+            <label><span>Masa cia�a</span><div class="input-unit"><input id="profileWeight" type="number" min="35" max="300" step="0.1" value="78.4"><em>kg</em></div></label>
+            <label class="span-2"><span>Poziom aktywno�ci</span><select id="profileActivity"><option value="1.2">Ma�a - praca siedz�ca, brak trening�w</option><option value="1.375">Lekka - 1-3 treningi w tygodniu</option><option value="1.55" selected>�rednia - 3-5 trening�w w tygodniu</option><option value="1.725">Wysoka - 6-7 trening�w w tygodniu</option><option value="1.9">Bardzo wysoka - ci��ka praca i treningi</option></select></label>
+            <label class="span-2"><span>Tw�j cel</span><div class="goal-options"><button data-goal="-400"><span data-icon="down"></span><b>Redukcja</b><small>-400 kcal</small></button><button class="selected" data-goal="0"><span data-icon="balance"></span><b>Utrzymanie</b><small>Bilans</small></button><button data-goal="300"><span data-icon="up"></span><b>Budowa masy</b><small>+300 kcal</small></button></div></label>
+          </div></article>
+          <aside class="card needs-card"><p class="eyebrow">Tw�j plan</p><h2>Dzienne zapotrzebowanie</h2><div class="need-number"><strong id="calculatedGoal">2 200</strong><span>kcal / dzie�</span></div><div class="need-breakdown"><div><span>Podstawowa przemiana</span><b id="bmrValue">1 778 kcal</b></div><div><span>Ca�kowite zapotrzebowanie</span><b id="tdeeValue">2 756 kcal</b></div><div><span>Korekta celu</span><b id="goalAdjustment">0 kcal</b></div></div><div class="macro-targets"><div class="protein"><b id="calcProtein">150 g</b><span>Bia�ko</span></div><div class="carbs"><b id="calcCarbs">248 g</b><span>W�gle</span></div><div class="fat"><b id="calcFat">68 g</b><span>T�uszcze</span></div></div><p class="formula-note"><span data-icon="info"></span> Wynik obliczamy wzorem Mifflina-St Jeora. To dobry punkt startowy - obserwuj trend masy przez 2-3 tygodnie.</p></aside>
+        </div>
+        <article class="card settings-card"><div><span class="settings-icon" data-icon="moon"></span><span><b>Wygl�d aplikacji</b><small>Wybierz motyw wygodny dla oczu</small></span></div><div class="segmented"><button data-theme-choice="dark" class="selected">Ciemny</button><button data-theme-choice="light">Jasny</button><button data-theme-choice="system">Systemowy</button></div></article>
+        <article class="card settings-card install-card"><div><span class="settings-icon" data-icon="phone"></span><span><b>Zainstaluj Kalorio</b><small>Dodaj aplikacj� do ekranu g��wnego iPhone'a</small></span></div><button class="secondary-btn" id="installHelp">Poka� instrukcj�</button></article>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Nawigacja mobilna">
+      <button class="active" data-view="today"><span data-icon="home"></span><small>Dzisiaj</small></button>
+      <button data-view="food"><span data-icon="search"></span><small>Produkty</small></button>
+      <button class="add-fab" data-open-add aria-label="Dodaj posi�ek"><span data-icon="plus"></span></button>
+      <button data-view="progress"><span data-icon="chart"></span><small>Post�py</small></button>
+      <button data-view="profile"><span data-icon="user"></span><small>Profil</small></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <section class="sheet" id="addSheet" role="dialog" aria-modal="true" aria-labelledby="addSheetTitle">
+    <div class="sheet-handle"></div><div class="sheet-head"><div><p class="eyebrow">Dziennik</p><h2 id="addSheetTitle">Dodaj do posi�ku</h2></div><button class="icon-btn" data-close-modal aria-label="Zamknij"><span data-icon="close"></span></button></div>
+    <div class="meal-tabs" id="mealTabs"></div>
+    <div class="search-box"><span data-icon="search"></span><input id="sheetSearch" type="search" placeholder="Szukaj produktu"></div>
+    <div class="quick-options"><button data-add-mode="search"><span class="quick-icon" data-icon="search"></span><span><b>Wyszukaj w bazie</b><small>Gotowe produkty i warto�ci</small></span><span data-icon="chevron"></span></button><button data-add-mode="ai"><span class="quick-icon ai" data-icon="sparkles"></span><span><b>Dodaj z AI</b><small>Opis tekstowy lub zdj�cie</small></span><span data-icon="chevron"></span></button><button data-add-mode="custom"><span class="quick-icon custom" data-icon="plus"></span><span><b>W�asny produkt</b><small>Wpisz kalorie i makro</small></span><span data-icon="chevron"></span></button></div>
+    <p class="sheet-label">Popularne</p><div class="sheet-products" id="sheetProducts"></div>
+  </section>
+
+  <section class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+    <div class="modal-head"><div><p class="eyebrow">Dodaj produkt</p><h2 id="productModalTitle">Produkt</h2></div><button class="icon-btn" data-close-modal aria-label="Zamknij"><span data-icon="close"></span></button></div>
+    <div class="product-modal-info"><div class="food-emoji" id="modalEmoji">??</div><div><b id="modalProductName">Produkt</b><small id="modalProductBrand">na 100 g</small></div></div>
+    <label><span>Porcja</span><div class="portion-control"><button id="portionMinus">-</button><input id="portionValue" type="number" min="1" value="100"><select id="portionUnit"><option value="g">g</option><option value="ml">ml</option></select><button id="portionPlus">+</button></div></label>
+    <div class="modal-macros"><div><strong id="modalKcal">0</strong><span>kcal</span></div><div><strong id="modalProtein">0 g</strong><span>Bia�ko</span></div><div><strong id="modalCarbs">0 g</strong><span>W�gle</span></div><div><strong id="modalFat">0 g</strong><span>T�uszcz</span></div></div>
+    <label><span>Posi�ek</span><select id="modalMeal"></select></label>
+    <button class="primary-btn full" id="confirmProduct"><span data-icon="plus"></span> Dodaj do dziennika</button>
+  </section>
+
+  <section class="modal" id="customModal" role="dialog" aria-modal="true" aria-labelledby="customTitle">
+    <div class="modal-head"><div><p class="eyebrow">Tw�j produkt</p><h2 id="customTitle">Dodaj w�asny produkt</h2></div><button class="icon-btn" data-close-modal aria-label="Zamknij"><span data-icon="close"></span></button></div>
+    <form id="customForm" class="custom-form">
+      <label class="span-2"><span>Nazwa produktu</span><input name="name" required placeholder="Np. domowa granola"></label>
+      <label class="span-2"><span>Marka / opis <em>opcjonalnie</em></span><input name="brand" placeholder="Np. w�asny przepis"></label>
+      <label><span>Kalorie / 100 g</span><input name="kcal" required type="number" min="0" placeholder="420"></label>
+      <label><span>Bia�ko / 100 g</span><input name="protein" required type="number" min="0" step="0.1" placeholder="12"></label>
+      <label><span>W�gle / 100 g</span><input name="carbs" required type="number" min="0" step="0.1" placeholder="58"></label>
+      <label><span>T�uszcz / 100 g</span><input name="fat" required type="number" min="0" step="0.1" placeholder="16"></label>
+      <button class="primary-btn full span-2" type="submit"><span data-icon="check"></span> Zapisz produkt</button>
+    </form>
+  </section>
+
+  <section class="modal small-modal" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="modal-head"><h2 id="infoTitle">Jak zainstalowa� na iPhonie?</h2><button class="icon-btn" data-close-modal aria-label="Zamknij"><span data-icon="close"></span></button></div>
+    <ol class="install-steps"><li><b>Otw�rz stron� w Safari</b><span>Instalowanie z innych przegl�darek mo�e by� niedost�pne.</span></li><li><b>Dotknij "Udost�pnij"</b><span>Ikona kwadratu ze strza�k� na pasku Safari.</span></li><li><b>Wybierz "Dodaj do ekranu pocz�tkowego"</b><span>Potwierd� nazw� Kalorio i naci�nij "Dodaj".</span></li></ol>
+    <button class="primary-btn full" data-close-modal>Rozumiem</button>
+  </section>
+
+  <div class="toast" id="toast"><span data-icon="check"></span><span id="toastText">Gotowe</span></div>
+  <script src="app.js"></script>
+</body>
+</html>
+
