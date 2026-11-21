@@ -2,7 +2,7 @@
   "name": "Kalorio — dziennik kalorii",
   "short_name": "Kalorio",
   "description": "Prosty dziennik kalorii, makro i posiłków.",
-  "start_url": "./?v=14",
+  "start_url": "./?v=15",
   "display": "standalone",
   "background_color": "#0a0d0c",
   "theme_color": "#9b7bff",
@@ -13,3 +13,4 @@
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ]
 }
+
