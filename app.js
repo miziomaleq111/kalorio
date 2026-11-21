@@ -136,7 +136,38 @@ function showOnboarding(step='auth'){const onboarding=document.getElementById('o
 function hideOnboarding(){document.getElementById('onboarding').classList.add('hidden');document.body.classList.remove('onboarding-open')}
 function renderIdentity(){const user=firebaseUser||state.user,name=user?.displayName||user?.name||'',first=name.trim().split(/\s+/)[0]||'',initial=(first[0]||'K').toUpperCase(),hour=new Date().getHours(),hello=hour<12?'Dzień dobry':hour<18?'Cześć':'Dobry wieczór';document.getElementById('greetingTitle').textContent=first?`${hello}, ${first}`:hello;document.getElementById('profileChipName').textContent=first||'Twój profil';document.getElementById('profileChipGoal').textContent=`Cel: ${state.profile.adjustment<0?'redukcja':state.profile.adjustment>0?'budowa masy':'utrzymanie'}`;document.querySelectorAll('.user-initial,.mobile-header .avatar').forEach(el=>el.textContent=initial);const accountAvatar=document.getElementById('accountAvatar');accountAvatar.innerHTML=user?.photoURL?`<img src="${esc(user.photoURL)}" alt="">`:initial;document.getElementById('accountName').textContent=name||'Konto lokalne';document.getElementById('accountEmail').textContent=user?.email||'Dane są zapisane tylko na tym urządzeniu';document.getElementById('signOutBtn').classList.toggle('hidden',!firebaseUser)}
 function handleAuthUser(user){firebaseUser=user||null;if(user){state.user={name:user.displayName||'',displayName:user.displayName||'',email:user.email||'',photoURL:user.photoURL||''};state.offlineMode=false;save();renderIdentity();state.onboardingComplete?hideOnboarding():showOnboarding('setup')}else{renderIdentity();if(!state.offlineMode)showOnboarding('auth')}}
-async function initFirebase(){document.getElementById('continueOffline').classList.toggle('hidden',firebaseConfigured());if(!firebaseConfigured()){if(!state.onboardingComplete)showOnboarding('auth');else hideOnboarding();renderIdentity();return}try{const version='13.4.0',[appApi,authApi,aiApi]=await Promise.all([import(`https://www.gstatic.com/firebasejs/${version}/firebase-app.js`),import(`https://www.gstatic.com/firebasejs/${version}/firebase-auth.js`),import(`https://www.gstatic.com/firebasejs/${version}/firebase-ai.js`)]),app=appApi.initializeApp(window.KALORIO_FIREBASE_CONFIG);firebaseAuthApi=authApi;auth=authApi.getAuth(app);await authApi.getRedirectResult(auth).catch(error=>{if(error.code!=='auth/no-auth-event')throw error});authApi.onAuthStateChanged(auth,handleAuthUser);const schema=aiApi.Schema.object({properties:{meal_name:aiApi.Schema.string(),confidence:aiApi.Schema.number(),needs_confirmation:aiApi.Schema.boolean(),notes:aiApi.Schema.array({items:aiApi.Schema.string()}),ingredients:aiApi.Schema.array({items:aiApi.Schema.object({properties:{name:aiApi.Schema.string(),brand:aiApi.Schema.string(),amount_g:aiApi.Schema.number(),kcal:aiApi.Schema.number(),protein_g:aiApi.Schema.number(),carbs_g:aiApi.Schema.number(),fat_g:aiApi.Schema.number(),confidence:aiApi.Schema.number()}})}),totals:aiApi.Schema.object({properties:{kcal:aiApi.Schema.number(),protein_g:aiApi.Schema.number(),carbs_g:aiApi.Schema.number(),fat_g:aiApi.Schema.number()}})}}),ai=aiApi.getAI(app,{backend:new aiApi.GoogleAIBackend()});aiModel=aiApi.getGenerativeModel(ai,{model:window.KALORIO_FIREBASE_CONFIG.aiModel||'gemini-3.8-flash',generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:.15}})}catch(error){console.error('Firebase init:',error);document.getElementById('continueOffline').classList.remove('hidden');if(!state.onboardingComplete)showOnboarding('auth');showToast('Nie udało się połączyć usług Google')}}
+async function initFirebase(){
+  document.getElementById('continueOffline').classList.toggle('hidden',firebaseConfigured());
+  if(!firebaseConfigured()){
+    if(!state.onboardingComplete)showOnboarding('auth');else hideOnboarding();
+    renderIdentity();
+    return;
+  }
+  try{
+    const version='13.4.0';
+    const [appApi,authApi,aiApi,appCheckApi]=await Promise.all([
+      import(`https://www.gstatic.com/firebasejs/${version}/firebase-app.js`),
+      import(`https://www.gstatic.com/firebasejs/${version}/firebase-auth.js`),
+      import(`https://www.gstatic.com/firebasejs/${version}/firebase-ai.js`),
+      import(`https://www.gstatic.com/firebasejs/${version}/firebase-app-check.js`)
+    ]);
+    const config=window.KALORIO_FIREBASE_CONFIG;
+    const app=appApi.initializeApp(config);
+    appCheckApi.initializeAppCheck(app,{provider:new appCheckApi.ReCaptchaEnterpriseProvider(config.appCheckSiteKey),isTokenAutoRefreshEnabled:true});
+    firebaseAuthApi=authApi;
+    auth=authApi.getAuth(app);
+    await authApi.getRedirectResult(auth).catch(error=>{if(error.code!=='auth/no-auth-event')throw error});
+    authApi.onAuthStateChanged(auth,handleAuthUser);
+    const schema=aiApi.Schema.object({properties:{meal_name:aiApi.Schema.string(),confidence:aiApi.Schema.number(),needs_confirmation:aiApi.Schema.boolean(),notes:aiApi.Schema.array({items:aiApi.Schema.string()}),ingredients:aiApi.Schema.array({items:aiApi.Schema.object({properties:{name:aiApi.Schema.string(),brand:aiApi.Schema.string(),amount_g:aiApi.Schema.number(),kcal:aiApi.Schema.number(),protein_g:aiApi.Schema.number(),carbs_g:aiApi.Schema.number(),fat_g:aiApi.Schema.number(),confidence:aiApi.Schema.number()}})}),totals:aiApi.Schema.object({properties:{kcal:aiApi.Schema.number(),protein_g:aiApi.Schema.number(),carbs_g:aiApi.Schema.number(),fat_g:aiApi.Schema.number()}})}});
+    const ai=aiApi.getAI(app,{backend:new aiApi.GoogleAIBackend(),useLimitedUseAppCheckTokens:true});
+    aiModel=aiApi.getGenerativeModel(ai,{model:config.aiModel||'gemini-3.8-flash',generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:.15}});
+  }catch(error){
+    console.error('Firebase init:',error);
+    document.getElementById('continueOffline').classList.remove('hidden');
+    if(!state.onboardingComplete)showOnboarding('auth');
+    showToast('Nie udało się połączyć usług Google');
+  }
+}
 document.getElementById('googleSignIn').onclick=async()=>{if(!auth||!firebaseAuthApi)return showToast('Logowanie Google czeka na podłączenie Firebase');const button=document.getElementById('googleSignIn');button.disabled=true;try{const provider=new firebaseAuthApi.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await firebaseAuthApi.signInWithRedirect(auth,provider)}catch(error){button.disabled=false;console.error(error);showToast('Nie udało się rozpocząć logowania Google')}};
 document.getElementById('continueOffline').onclick=()=>{state.offlineMode=true;save();showOnboarding('setup')};
 document.getElementById('setupStep').onsubmit=e=>{e.preventDefault();document.getElementById('profileSex').value=document.getElementById('setupSex').value;document.getElementById('profileAge').value=document.getElementById('setupAge').value;document.getElementById('profileHeight').value=document.getElementById('setupHeight').value;document.getElementById('profileWeight').value=document.getElementById('setupWeight').value;document.getElementById('profileActivity').value=document.getElementById('setupActivity').value;const adjustment=Number(document.getElementById('setupGoal').value);document.querySelectorAll('[data-goal]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.goal)===adjustment));const result=calcNeeds();state.profile=result.profile;state.goal=result.target;state.macroGoals={p:result.p,c:result.c,f:result.f};state.weights=[{date:dateKey(today),value:result.profile.weight}];state.onboardingComplete=true;save();hideOnboarding();loadProfile();renderIdentity();renderDashboard();renderProgress();showToast('Twój plan jest gotowy')};
