@@ -68,11 +68,13 @@ function switchView(name){document.querySelectorAll('.view').forEach(v=>v.classL
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
 document.querySelectorAll('[data-view-link]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();switchView(b.dataset.viewLink)}));
 
-function setTheme(theme){state.theme=theme;let actual=theme;if(theme==='system')actual=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=actual;document.querySelector('meta[name="theme-color"]').content=actual==='dark'?'#090c0b':'#f4f6f3';document.querySelectorAll('[data-theme-choice]').forEach(b=>b.classList.toggle('selected',b.dataset.themeChoice===theme));document.querySelectorAll('.theme-toggle span:last-child').forEach(s=>s.textContent=actual==='dark'?'Jasny motyw':'Ciemny motyw');save()}
+const themeColors={violet:{dark:'#0c0913',light:'#f7f3ff'},ocean:{dark:'#071018',light:'#f1f8fc'},sunset:{dark:'#130c08',light:'#fff7f0'},rose:{dark:'#14090f',light:'#fff3f8'},lime:{dark:'#090c0b',light:'#f4f6f3'}};
+function syncThemeColor(){const accent=document.documentElement.dataset.accent||'violet',theme=document.documentElement.dataset.theme||'dark';document.querySelector('meta[name="theme-color"]').content=themeColors[accent]?.[theme]||themeColors.violet[theme]}
+function setTheme(theme){state.theme=theme;let actual=theme;if(theme==='system')actual=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=actual;syncThemeColor();document.querySelectorAll('[data-theme-choice]').forEach(b=>b.classList.toggle('selected',b.dataset.themeChoice===theme));document.querySelectorAll('.theme-toggle span:last-child').forEach(s=>s.textContent=actual==='dark'?'Jasny motyw':'Ciemny motyw');save()}
 setTheme(state.theme||'dark');
 document.querySelectorAll('[data-theme-toggle]').forEach(b=>b.addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')));
 document.querySelectorAll('[data-theme-choice]').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.themeChoice)));
-function setAccent(accent){state.accent=accent||'violet';document.documentElement.dataset.accent=state.accent;document.querySelectorAll('[data-accent-choice]').forEach(b=>b.classList.toggle('selected',b.dataset.accentChoice===state.accent));save()}
+function setAccent(accent){state.accent=accent||'violet';document.documentElement.dataset.accent=state.accent;syncThemeColor();document.querySelectorAll('[data-accent-choice]').forEach(b=>b.classList.toggle('selected',b.dataset.accentChoice===state.accent));save()}
 setAccent(state.accent);
 document.querySelectorAll('[data-accent-choice]').forEach(b=>b.addEventListener('click',()=>setAccent(b.dataset.accentChoice)));
 
@@ -156,6 +158,7 @@ async function initFirebase(){
     appCheckApi.initializeAppCheck(app,{provider:new appCheckApi.ReCaptchaEnterpriseProvider(config.appCheckSiteKey),isTokenAutoRefreshEnabled:true});
     firebaseAuthApi=authApi;
     auth=authApi.getAuth(app);
+    await authApi.setPersistence(auth,authApi.browserLocalPersistence);
     await authApi.getRedirectResult(auth).catch(error=>{if(error.code!=='auth/no-auth-event')throw error});
     authApi.onAuthStateChanged(auth,handleAuthUser);
     const schema=aiApi.Schema.object({properties:{meal_name:aiApi.Schema.string(),confidence:aiApi.Schema.number(),needs_confirmation:aiApi.Schema.boolean(),notes:aiApi.Schema.array({items:aiApi.Schema.string()}),ingredients:aiApi.Schema.array({items:aiApi.Schema.object({properties:{name:aiApi.Schema.string(),brand:aiApi.Schema.string(),amount_g:aiApi.Schema.number(),kcal:aiApi.Schema.number(),protein_g:aiApi.Schema.number(),carbs_g:aiApi.Schema.number(),fat_g:aiApi.Schema.number(),confidence:aiApi.Schema.number()}})}),totals:aiApi.Schema.object({properties:{kcal:aiApi.Schema.number(),protein_g:aiApi.Schema.number(),carbs_g:aiApi.Schema.number(),fat_g:aiApi.Schema.number()}})}});
@@ -168,7 +171,28 @@ async function initFirebase(){
     showToast('Nie udało się połączyć usług Google');
   }
 }
-document.getElementById('googleSignIn').onclick=async()=>{if(!auth||!firebaseAuthApi)return showToast('Logowanie Google czeka na podłączenie Firebase');const button=document.getElementById('googleSignIn');button.disabled=true;try{const provider=new firebaseAuthApi.GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await firebaseAuthApi.signInWithRedirect(auth,provider)}catch(error){button.disabled=false;console.error(error);showToast('Nie udało się rozpocząć logowania Google')}};
+document.getElementById('googleSignIn').onclick=async()=>{
+  if(!auth||!firebaseAuthApi)return showToast('Logowanie Google nie jest jeszcze gotowe');
+  const button=document.getElementById('googleSignIn');
+  button.disabled=true;
+  try{
+    const provider=new firebaseAuthApi.GoogleAuthProvider();
+    provider.setCustomParameters({prompt:'select_account'});
+    const result=await firebaseAuthApi.signInWithPopup(auth,provider);
+    handleAuthUser(result.user);
+  }catch(error){
+    console.error('Google sign-in:',error);
+    const messages={
+      'auth/popup-closed-by-user':'Okno logowania zostało zamknięte',
+      'auth/popup-blocked':'Przeglądarka zablokowała okno logowania',
+      'auth/unauthorized-domain':'Domena aplikacji nie jest dozwolona w Firebase',
+      'auth/operation-not-allowed':'Logowanie Google nie jest włączone w Firebase'
+    };
+    showToast(messages[error.code]||`Błąd logowania: ${error.code||'spróbuj ponownie'}`);
+  }finally{
+    button.disabled=false;
+  }
+};
 document.getElementById('continueOffline').onclick=()=>{state.offlineMode=true;save();showOnboarding('setup')};
 document.getElementById('setupStep').onsubmit=e=>{e.preventDefault();document.getElementById('profileSex').value=document.getElementById('setupSex').value;document.getElementById('profileAge').value=document.getElementById('setupAge').value;document.getElementById('profileHeight').value=document.getElementById('setupHeight').value;document.getElementById('profileWeight').value=document.getElementById('setupWeight').value;document.getElementById('profileActivity').value=document.getElementById('setupActivity').value;const adjustment=Number(document.getElementById('setupGoal').value);document.querySelectorAll('[data-goal]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.goal)===adjustment));const result=calcNeeds();state.profile=result.profile;state.goal=result.target;state.macroGoals={p:result.p,c:result.c,f:result.f};state.weights=[{date:dateKey(today),value:result.profile.weight}];state.onboardingComplete=true;save();hideOnboarding();loadProfile();renderIdentity();renderDashboard();renderProgress();showToast('Twój plan jest gotowy')};
 document.getElementById('signOutBtn').onclick=async()=>{if(!auth||!firebaseAuthApi)return;await firebaseAuthApi.signOut(auth);state.user=null;state.onboardingComplete=false;save();showOnboarding('auth');showToast('Wylogowano z konta')};
