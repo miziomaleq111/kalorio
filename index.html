@@ -9,10 +9,10 @@
   <meta name="apple-mobile-web-app-title" content="Kalorio">
   <title>Kalorio — dziennik kalorii</title>
   <meta name="description" content="Mobilny dziennik kalorii, makro i posiłków.">
-  <link rel="manifest" href="manifest.webmanifest?v=2">
+  <link rel="manifest" href="manifest.webmanifest?v=3">
   <link rel="icon" href="icon.svg">
-  <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <section class="onboarding hidden" id="onboarding" aria-live="polite">
@@ -24,7 +24,7 @@
       <p class="onboarding-copy">Zapisuj posiłki, śledź makro i analizuj jedzenie ze zdjęcia albo dokładnego opisu.</p>
       <button class="google-btn" id="googleSignIn"><span class="google-mark">G</span><b>Kontynuuj z Google</b></button>
       <button class="offline-btn hidden" id="continueOffline">Na razie korzystaj lokalnie</button>
-      <p class="privacy-note"><span data-icon="shield"></span> Dane konta służą do bezpiecznego logowania. Dziennik pozostaje na tym urządzeniu do czasu włączenia synchronizacji.</p>
+      <p class="privacy-note"><span data-icon="shield"></span> Po zalogowaniu dziennik, cele i własne produkty są przypisane do Twojego konta i synchronizowane między urządzeniami.</p>
     </div>
     <form class="onboarding-card hidden" id="setupStep">
       <div class="setup-progress"><span class="done"></span><span class="active"></span></div>
@@ -76,7 +76,10 @@
 
         <div class="date-strip">
           <button class="icon-btn" id="prevDay" aria-label="Poprzedni dzień"><span data-icon="back"></span></button>
-          <button class="date-current" id="datePickerBtn"><b id="dateTitle">Dzisiaj</b><span id="dateLong">20 listopada, piątek</span></button>
+          <div class="date-center">
+            <button class="date-current" id="datePickerBtn"><b id="dateTitle">Dzisiaj</b><span id="dateLong">20 listopada, piątek</span></button>
+            <div class="week-strip" id="weekStrip" aria-label="Wybierz dzień"></div>
+          </div>
           <button class="icon-btn" id="nextDay" aria-label="Następny dzień"><span data-icon="forward"></span></button>
         </div>
 
@@ -176,13 +179,13 @@
         </div>
         <article class="card settings-card"><div><span class="settings-icon" data-icon="moon"></span><span><b>Jasność aplikacji</b><small>Wybierz motyw wygodny dla oczu</small></span></div><div class="segmented"><button data-theme-choice="dark" class="selected">Ciemny</button><button data-theme-choice="light">Jasny</button><button data-theme-choice="system">Systemowy</button></div></article>
         <article class="card settings-card palette-card"><div><span class="settings-icon" data-icon="palette"></span><span><b>Kolor aplikacji</b><small>Wybierz paletę, która pasuje do Ciebie</small></span></div><div class="palette-options" aria-label="Kolor aplikacji"><button data-accent-choice="violet" class="violet selected" aria-label="Fioletowy"></button><button data-accent-choice="ocean" class="ocean" aria-label="Niebieski"></button><button data-accent-choice="sunset" class="sunset" aria-label="Pomarańczowy"></button><button data-accent-choice="rose" class="rose" aria-label="Różowy"></button><button data-accent-choice="lime" class="lime" aria-label="Zielony"></button></div></article>
-        <article class="card settings-card account-card"><div><span class="account-avatar" id="accountAvatar">K</span><span><b id="accountName">Konto lokalne</b><small id="accountEmail">Połącz Google, aby synchronizować dane</small></span></div><button class="secondary-btn hidden" id="signOutBtn">Wyloguj</button></article>
+        <article class="card settings-card account-card"><div><span class="account-avatar" id="accountAvatar">K</span><span><b id="accountName">Konto lokalne</b><small id="accountEmail">Połącz Google, aby synchronizować dane</small><small class="sync-status" id="syncStatus">Zapis lokalny</small></span></div><button class="secondary-btn hidden" id="signOutBtn">Wyloguj</button></article>
         <article class="card settings-card install-card"><div><span class="settings-icon" data-icon="phone"></span><span><b>Zainstaluj Kalorio</b><small>Dodaj aplikację do ekranu głównego iPhone’a</small></span></div><button class="secondary-btn" id="installHelp">Pokaż instrukcję</button></article>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="Nawigacja mobilna">
-      <button class="active" data-view="today"><span data-icon="home"></span><small>Dzisiaj</small></button>
+      <button class="active" data-view="today"><span data-icon="home"></span><small>Dziennik</small></button>
       <button data-view="food"><span data-icon="search"></span><small>Produkty</small></button>
       <button class="add-fab" data-open-add aria-label="Dodaj posiłek"><span data-icon="plus"></span></button>
       <button data-view="progress"><span data-icon="chart"></span><small>Postępy</small></button>
@@ -229,6 +232,6 @@
 
   <div class="toast" id="toast"><span data-icon="check"></span><span id="toastText">Gotowe</span></div>
   <script src="firebase-config.js?v=5"></script>
-  <script type="module" src="app.js?v=5"></script>
+  <script type="module" src="app.js?v=6"></script>
 </body>
 </html>

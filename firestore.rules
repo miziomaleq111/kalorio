@@ -1,0 +1,85 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Path: users/{userId}/private/appState
+    // Owner-only document containing private profile and diary data.
+    // Fields:
+    //   uid: string (required, immutable, must match auth UID)
+    //   schemaVersion: int (required, currently 4)
+    //   payload: string (required, JSON, 1..900000 characters)
+    //   createdAt: timestamp (required, immutable)
+    //   updatedAt: timestamp (required, server timestamp on every write)
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+
+    function uidUnchanged() {
+      return request.resource.data.uid == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return request.resource.data.uid == resource.data.uid;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isRecent(time) {
+      return time is timestamp &&
+        time > request.time - duration.value(5, 'm') &&
+        time <= request.time;
+    }
+
+    function isValidAppState(userId) {
+      return hasRequiredFields(['uid', 'schemaVersion', 'payload', 'createdAt', 'updatedAt']) &&
+        hasOnlyAllowedFields(['uid', 'schemaVersion', 'payload', 'createdAt', 'updatedAt']) &&
+        request.resource.data.uid is string &&
+        request.resource.data.uid == userId &&
+        request.resource.data.uid.size() >= 20 &&
+        request.resource.data.uid.size() <= 128 &&
+        request.resource.data.schemaVersion is int &&
+        request.resource.data.schemaVersion == 4 &&
+        request.resource.data.payload is string &&
+        request.resource.data.payload.size() > 0 &&
+        request.resource.data.payload.size() <= 900000 &&
+        request.resource.data.createdAt is timestamp &&
+        request.resource.data.updatedAt is timestamp;
+    }
+
+    match /users/{userId}/private/appState {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) &&
+        uidUnchanged() &&
+        isValidAppState(userId) &&
+        isRecent(request.resource.data.createdAt) &&
+        request.resource.data.updatedAt == request.time;
+      allow update: if isOwner(userId) &&
+        isDocOwner() &&
+        uidNotModified() &&
+        isValidAppState(userId) &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.updatedAt == request.time;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
