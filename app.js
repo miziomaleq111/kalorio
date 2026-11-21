@@ -4,6 +4,14 @@ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
 sparkles:'<path d="m12 3-1.3 3.7L7 8l3.7 1.3L12 13l1.3-3.7L17 8l-3.7-1.3L12 3Z"/><path d="m5 14-.8 2.2L2 17l2.2.8L5 20l.8-2.2L8 17l-2.2-.8L5 14Zm14-2-.7 1.8-1.8.7 1.8.7L19 17l.7-1.8 1.8-.7-1.8-.7L19 12Z"/>',
 chart:'<path d="M4 20V10m6 10V4m6 16v-7m5 7H2"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',flame:'<path d="M13 2s1 4-2 7c-2-3-5-2-5-2s-3 4-1 9a7 7 0 0 0 13 0c2-5-2-10-5-14Z"/><path d="M12 13c2 2 2 5 0 7-2-1-3-3-2-5 1 0 2-1 2-2Z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',moon:'<path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/>',chevron:'<path d="m9 18 6-6-6-6"/>',back:'<path d="m15 18-6-6 6-6"/>',forward:'<path d="m9 18 6-6-6-6"/>',plus:'<path d="M12 5v14M5 12h14"/>',drop:'<path d="M12 2S5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13Z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',message:'<path d="M21 15a4 4 0 0 1-4 4H8l-5 3 1.6-5A7 7 0 0 1 3 12V8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v7Z"/>',camera:'<path d="M4 7h3l2-3h6l2 3h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><circle cx="12" cy="13" r="4"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/>',scale:'<path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M8 9a4 4 0 0 1 8 0l-4 2-4-2Z"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',check:'<path d="m5 12 4 4L19 6"/>',down:'<path d="M12 4v16m0 0-6-6m6 6 6-6"/>',up:'<path d="M12 20V4m0 0-6 6m6-6 6 6"/>',balance:'<path d="M12 3v18M5 6h14M5 6l-3 7h6L5 6Zm14 0-3 7h6l-3-7ZM8 21h8"/>',phone:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/>',close:'<path d="m6 6 12 12M18 6 6 18"/>',trash:'<path d="M4 7h16m-10 4v6m4-6v6M9 4h6l1 3H8l1-3Zm-3 3 1 14h10l1-14"/>',shield:'<path d="M12 3 5 6v5c0 4.6 2.8 8.1 7 10 4.2-1.9 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-5"/>',palette:'<path d="M12 3a9 9 0 0 0 0 18h1.4a1.8 1.8 0 0 0 1.4-3l-.4-.5a1.5 1.5 0 0 1 1.2-2.4H18a3 3 0 0 0 3-3c0-5-4-9.1-9-9.1Z"/><circle cx="7.5" cy="11" r=".6" fill="currentColor"/><circle cx="10" cy="7" r=".6" fill="currentColor"/><circle cx="15" cy="7.5" r=".6" fill="currentColor"/>',breakfast:'<path d="M4 13h16a8 8 0 0 0-16 0Z"/><path d="M2 17h20M12 5V2m-6 5L4 5m14 2 2-2"/>',lunch:'<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/><path d="M3 4v6m3-6v6M3 7h3m15-3v16"/>',snack:'<path d="M8 8h8l2 3-2 10H8L6 11l2-3Z"/><path d="M9 8 8 4h8l-1 4m-3-4V2"/>',dinner:'<path d="M4 15h16a8 8 0 0 0-16 0Z"/><path d="M2 19h20M12 7V4"/>'
 };
+Object.assign(icons,{
+  breakfast:'<path d="M5 9h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z"/><path d="M16 11h1.5a2.5 2.5 0 0 1 0 5H16M8 5c0-1 1-1.4 1-2.5M12 5c0-1 1-1.4 1-2.5"/>',
+  secondBreakfast:'<path d="M6 9v10h12V9c0-3.6-2.3-6-6-6S6 5.4 6 9Z"/><path d="M9 10h6M10 14h4"/>',
+  lunch:'<path d="m4 9 8-5 8 5-8 5-8-5Z"/><path d="m4 13 8 5 8-5M7 11l3 2"/>',
+  mainMeal:'<circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2.5"/><path d="M3 4v7m3-7v7M3 8h3m15-4v16"/>',
+  snack:'<path d="M12 8c-1.8-2-6-1.3-6 3.2C6 16 9.3 20 12 20s6-4 6-8.8C18 6.7 13.8 6 12 8Z"/><path d="M12 8c0-2 1.2-4 3-5M12.5 5c-1.7-1.2-3.2-1-4.5 0"/>',
+  dinner:'<path d="M4 15h16a8 8 0 0 0-16 0Z"/><path d="M2 19h20M9 5h6M12 5v2"/>'
+});
 document.querySelectorAll('[data-icon]').forEach(el=>{const n=el.dataset.icon;el.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[n]||icons.info}</svg>`});
 
 const PRODUCTS=[
@@ -44,7 +52,7 @@ const PRODUCTS=[
 {id:'darkchoc',name:'Czekolada gorzka 70%',brand:'tabliczka',cat:'Przekąski',emoji:'🍫',kcal:598,p:7.8,c:46,f:43,keys:'czekolada'},
 {id:'coffee',name:'Kawa z mlekiem',brand:'bez cukru',cat:'Napoje',emoji:'☕',kcal:24,p:1.2,c:1.8,f:1.2,keys:'kawa latte'}
 ];
-const MEALS=[{id:'breakfast',name:'Śniadanie',icon:'breakfast',hint:'7:00–10:00'},{id:'secondBreakfast',name:'II śniadanie',icon:'breakfast',hint:'10:00–12:00'},{id:'lunch',name:'Lunch',icon:'lunch',hint:'12:00–14:00'},{id:'mainMeal',name:'Obiad',icon:'lunch',hint:'14:00–17:00'},{id:'snack',name:'Przekąska',icon:'snack',hint:'W ciągu dnia'},{id:'dinner',name:'Kolacja',icon:'dinner',hint:'18:00–21:00'}];
+const MEALS=[{id:'breakfast',name:'Śniadanie',icon:'breakfast',hint:'7:00–10:00'},{id:'secondBreakfast',name:'II śniadanie',icon:'secondBreakfast',hint:'10:00–12:00'},{id:'lunch',name:'Lunch',icon:'lunch',hint:'12:00–14:00'},{id:'mainMeal',name:'Obiad',icon:'mainMeal',hint:'14:00–17:00'},{id:'snack',name:'Przekąska',icon:'snack',hint:'W ciągu dnia'},{id:'dinner',name:'Kolacja',icon:'dinner',hint:'18:00–21:00'}];
 const normalize=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const dateKey=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
 const today=new Date();
@@ -228,3 +236,4 @@ document.getElementById('addWeightBtn').onclick=()=>{const val=prompt('Podaj akt
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();switchView('food');setTimeout(()=>document.getElementById('foodSearch').focus(),50)}if(e.key==='Escape')closeModals()});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 loadProfile();renderIdentity();updateDate();renderProducts();renderProgress();initFirebase();
+
