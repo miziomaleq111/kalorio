@@ -1,4 +1,21 @@
 {
+  "hosting": {
+    "site": "kalorio-app",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "firestore.rules",
+      "dist/**",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
   "firestore": {
     "rules": "firestore.rules"
   }
