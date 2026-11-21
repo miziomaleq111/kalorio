@@ -12,6 +12,16 @@ html[data-accent="ocean"]{--accent:#36a8ff;--accent-bright:#75c5ff;--accent-ink:
 html[data-accent="sunset"]{--accent:#ff8a47;--accent-bright:#ffad70;--accent-ink:#2b1004}
 html[data-accent="rose"]{--accent:#ff5b9f;--accent-bright:#ff91bf;--accent-ink:#2c0717}
 html[data-accent="lime"]{--accent:#9adb35;--accent-bright:#b8f34a;--accent-ink:#132006}
+html[data-theme="dark"][data-accent="violet"]{--bg:#0c0913;--surface:#15111d;--surface-2:#1d1728;--surface-3:#271f34;--line:#332841}
+html[data-theme="dark"][data-accent="ocean"]{--bg:#071018;--surface:#0d1821;--surface-2:#14232e;--surface-3:#1b2e3b;--line:#263b49}
+html[data-theme="dark"][data-accent="sunset"]{--bg:#130c08;--surface:#1d130e;--surface-2:#281b13;--surface-3:#342419;--line:#473024}
+html[data-theme="dark"][data-accent="rose"]{--bg:#14090f;--surface:#1e1017;--surface-2:#2a1721;--surface-3:#371e2a;--line:#482737}
+html[data-theme="dark"][data-accent="lime"]{--bg:#090c0b;--surface:#111512;--surface-2:#181d19;--surface-3:#202620;--line:#282f29}
+html[data-theme="light"][data-accent="violet"]{--bg:#f7f3ff;--surface:#fff;--surface-2:#eee8f8;--surface-3:#e5dcf3;--line:#ddd2eb}
+html[data-theme="light"][data-accent="ocean"]{--bg:#f1f8fc;--surface:#fff;--surface-2:#e5f1f8;--surface-3:#d9eaf4;--line:#cddfe9}
+html[data-theme="light"][data-accent="sunset"]{--bg:#fff7f0;--surface:#fff;--surface-2:#f8eadf;--surface-3:#f1dfd0;--line:#ead4c3}
+html[data-theme="light"][data-accent="rose"]{--bg:#fff3f8;--surface:#fff;--surface-2:#f8e5ee;--surface-3:#f1d8e4;--line:#e8cbd9}
+html[data-theme="light"][data-accent="lime"]{--bg:#f4f6f3;--surface:#fff;--surface-2:#eef1ed;--surface-3:#e6eae4;--line:#dfe4de}
 
 .onboarding{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;overflow:auto;padding:28px 18px;background:radial-gradient(circle at 14% 8%,color-mix(in srgb,var(--accent) 19%,transparent),transparent 34%),radial-gradient(circle at 90% 90%,color-mix(in srgb,var(--purple) 15%,transparent),transparent 32%),var(--bg)}
 .onboarding.hidden{display:none}.onboarding-open{overflow:hidden}.onboarding-glow{position:fixed;border-radius:999px;filter:blur(90px);pointer-events:none;opacity:.32}.glow-one{width:320px;height:320px;left:-120px;top:-110px;background:var(--accent)}.glow-two{width:280px;height:280px;right:-100px;bottom:-90px;background:#e05dff}
