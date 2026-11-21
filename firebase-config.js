@@ -6,6 +6,7 @@ window.KALORIO_FIREBASE_CONFIG = {
   storageBucket: "kalorio-5e83d.firebasestorage.app",
   messagingSenderId: "50936282166",
   appId: "1:50936282166:web:faab0775a056ddaba02c97",
+  appCheckSiteKey: "6LdxxiouAAAAAJC9MaDClSJs9do6iAJWUvE9CLv1",
   aiModel: "gemini-3.8-flash"
 };
 
