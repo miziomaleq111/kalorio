@@ -12,9 +12,15 @@
   <link rel="manifest" href="manifest.webmanifest?v=3">
   <link rel="icon" href="icon.svg">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
+  <div class="app-splash" id="appSplash" role="status" aria-label="Uruchamianie Kalorio">
+    <div class="splash-orbit"><span></span><img src="icon.svg?v=2" alt=""></div>
+    <strong>kalorio</strong>
+    <small>Twój dzień. Twoje cele.</small>
+    <div class="splash-progress"><i></i></div>
+  </div>
   <section class="onboarding hidden" id="onboarding" aria-live="polite">
     <div class="onboarding-glow glow-one"></div><div class="onboarding-glow glow-two"></div>
     <div class="onboarding-card" id="authStep">
@@ -123,7 +129,9 @@
 
       <section class="view" id="view-food">
         <div class="page-head"><div><p class="eyebrow">Baza żywności</p><h1>Znajdź produkt</h1><p class="muted">Wyszukaj produkt, ustaw porcję i dodaj do dziennika.</p></div><button class="secondary-btn" id="openCustomProduct"><span data-icon="plus"></span> Własny produkt</button></div>
-        <div class="search-box large"><span data-icon="search"></span><input id="foodSearch" type="search" placeholder="Np. skyr, banan, pierś z kurczaka…" autocomplete="off"><kbd>⌘ K</kbd></div>
+        <div class="search-box large"><span data-icon="search"></span><input id="foodSearch" type="search" placeholder="Np. skyr, banan, pierś z kurczaka…" autocomplete="off"><button class="store-search-btn" id="searchOnline" type="button">Szukaj w sklepach</button></div>
+        <div class="store-search-status" id="storeSearchStatus"><span data-icon="info"></span><span>Ponad 100 produktów offline. Wpisz nazwę i użyj „Szukaj w sklepach”, aby sprawdzić etykiety produktów.</span></div>
+        <div class="data-attribution">Dane produktów sklepowych: <a href="https://world.openfoodfacts.org/" target="_blank" rel="noopener">Open Food Facts</a> · ODbL</div>
         <div class="filter-row" id="categoryFilters"></div>
         <div class="food-layout">
           <div><div class="section-heading slim"><div><p class="eyebrow">Wyniki</p><h2>Popularne produkty</h2></div><span class="result-count" id="resultCount"></span></div><div class="product-grid" id="productGrid"></div></div>
@@ -136,8 +144,8 @@
         <div class="ai-grid">
           <article class="card ai-card featured">
             <div class="ai-card-icon"><span data-icon="message"></span></div><p class="eyebrow">Opis tekstowy</p><h2>Napisz, co było na talerzu</h2><p>Uwzględnij produkty i przybliżone porcje. Im dokładniejszy opis, tym lepszy wynik.</p>
-            <textarea id="aiText" rows="5" placeholder="Np. 60 g kleiku ryżowego, 30 g Whey WPC i 100 ml mleka 3,2%"></textarea>
-            <div class="example-chips"><button>Kleik ryżowy z 30 g WPC i 100 ml mleka 3,2%</button><button>2 kanapki z szynką i serem</button></div>
+            <textarea id="aiText" rows="5" placeholder="Np. owsianka z bananem, masłem orzechowym i mlekiem"></textarea>
+            <div class="example-chips"><button>Owsianka z bananem, łyżką masła orzechowego i 200 ml mleka</button><button>2 kanapki z szynką i serem</button></div>
             <button class="primary-btn full" id="analyzeText"><span data-icon="sparkles"></span> Oblicz kalorie i makro</button>
           </article>
           <article class="card ai-card">
@@ -232,7 +240,8 @@
 
   <div class="toast" id="toast"><span data-icon="check"></span><span id="toastText">Gotowe</span></div>
   <script src="firebase-config.js?v=5"></script>
-  <script type="module" src="app.js?v=8"></script>
+  <script src="products-extra.js?v=1"></script>
+  <script type="module" src="app.js?v=9"></script>
 </body>
 </html>
 
