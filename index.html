@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest?v=3">
   <link rel="icon" href="icon.svg">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <div class="app-splash" id="appSplash" role="status" aria-label="Uruchamianie Kalorio">
@@ -129,12 +129,12 @@
 
       <section class="view" id="view-food">
         <div class="page-head"><div><p class="eyebrow">Baza żywności</p><h1>Znajdź produkt</h1><p class="muted">Wyszukaj produkt, ustaw porcję i dodaj do dziennika.</p></div><button class="secondary-btn" id="openCustomProduct"><span data-icon="plus"></span> Własny produkt</button></div>
-        <div class="search-box large"><span data-icon="search"></span><input id="foodSearch" type="search" placeholder="Np. skyr, banan, pierś z kurczaka…" autocomplete="off"><button class="store-search-btn" id="searchOnline" type="button">Szukaj w sklepach</button></div>
-        <div class="store-search-status" id="storeSearchStatus"><span data-icon="info"></span><span>Ponad 100 produktów offline. Wpisz nazwę i użyj „Szukaj w sklepach”, aby sprawdzić etykiety produktów.</span></div>
+        <div class="search-box large"><span data-icon="search"></span><input id="foodSearch" type="search" placeholder="Nazwa, marka lub kod kreskowy" autocomplete="off"><button class="store-search-btn" id="searchOnline" type="button">Szukaj online</button></div>
+        <div class="store-search-status" id="storeSearchStatus"><span data-icon="info"></span><span>Wyniki łączą bazę Kalorio i produkty firm z internetu. Wpisz nazwę lub kod, a potem użyj „Szukaj online”.</span></div>
         <div class="data-attribution">Dane produktów sklepowych: <a href="https://world.openfoodfacts.org/" target="_blank" rel="noopener">Open Food Facts</a> · ODbL</div>
         <div class="filter-row" id="categoryFilters"></div>
         <div class="food-layout">
-          <div><div class="section-heading slim"><div><p class="eyebrow">Wyniki</p><h2>Popularne produkty</h2></div><span class="result-count" id="resultCount"></span></div><div class="product-grid" id="productGrid"></div></div>
+          <div><div class="section-heading slim"><div><p class="eyebrow">Baza Kalorio + internet</p><h2>Produkty i gotowe dania</h2></div><span class="result-count" id="resultCount"></span></div><div class="product-grid" id="productGrid"></div></div>
           <aside class="card recent-panel"><p class="eyebrow">Szybki dostęp</p><h3>Ostatnio dodane</h3><div id="recentProducts"></div><div class="recent-note"><span data-icon="clock"></span><p>Najczęściej wybierane produkty zawsze masz pod ręką.</p></div></aside>
         </div>
       </section>
@@ -241,7 +241,7 @@
   <div class="toast" id="toast"><span data-icon="check"></span><span id="toastText">Gotowe</span></div>
   <script src="firebase-config.js?v=5"></script>
   <script src="products-extra.js?v=1"></script>
-  <script type="module" src="app.js?v=9"></script>
+  <script type="module" src="app.js?v=10"></script>
 </body>
 </html>
 
